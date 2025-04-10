@@ -1,0 +1,41 @@
+{
+    "manifest_version": 3,
+    "name": "Browser Buddy - Browsing Analyzer",
+    "version": "1.0",
+    "description": "Shows most visited sites from the last 7 days.",
+    "permissions": [
+        "history"
+    ],
+    "action": {
+        "default_title": "Browse Buddy",
+        "default_icon": {
+            "16": "pic.png",
+            "32": "pic.png",
+            "48": "pic.png",
+            "128": "pic.png"
+        }
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "index.html",
+                "assets/*"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "icons": {
+        "16": "pic.png",
+        "32": "pic.png",
+        "48": "pic.png",
+        "128": "pic.png"
+    }
+}
