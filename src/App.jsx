@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
+import CustomizeCategoriesModal from './components/CustomizeCategoriesModal';
+import { generateBlockingRules, getFocusRuleIds } from "./utils/focusBlocker";
+
 
 const App = () => {
-  const [historyData, setHistoryData] = useState([]);
-  const [categoryData, setCategoryData] = useState([]);
-  const [activeTab, setActiveTab] = useState("today");
-
-  const categories = {
+  const defaultCategories = {
     "Social Media": [
       "facebook.com",
+      "x.com",
       "twitter.com",
       "instagram.com",
       "linkedin.com",
@@ -46,6 +46,27 @@ const App = () => {
       "hindustantimes.com",
     ],
   };
+
+  const [categories, setCategories] = useState(() => {
+    const saved = localStorage.getItem("customCategories");
+    return saved ? JSON.parse(saved) : defaultCategories;
+  });
+  const [focusMode, setFocusMode] = useState(() => {
+    return JSON.parse(localStorage.getItem("focusMode")) || false;
+  });
+
+  const [showModal, setShowModal] = useState(false);
+  const [historyData, setHistoryData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const [activeTab, setActiveTab] = useState("today");
+
+  useEffect(() => {
+    localStorage.setItem("focusMode", JSON.stringify(focusMode));
+  }, [focusMode]);
+
+  useEffect(() => {
+    localStorage.setItem("customCategories", JSON.stringify(categories));
+  }, [categories]);
 
   const getCategory = (hostname) => {
     for (const [category, sites] of Object.entries(categories)) {
@@ -95,8 +116,6 @@ const App = () => {
       chrome.history.search(
         { text: "", startTime: startTime, maxResults: 10000 },
         (results) => {
-          console.log("Raw history data:", results);
-
           const visitCounts = {};
 
           results.forEach((item) => {
@@ -128,7 +147,6 @@ const App = () => {
 
           setHistoryData(sortedData);
 
-          // ✅ Call category count function HERE, inside the callback
           const sortedCategories = calculateCategoryCounts(results);
           setCategoryData(sortedCategories);
         }
@@ -136,7 +154,34 @@ const App = () => {
     };
 
     fetchHistory();
-  }, [activeTab]);
+  }, [activeTab, categories]);
+
+
+  useEffect(() => {
+    const updateBlockingRules = async () => {
+      const focusCategorySites = categories["Social Media"] || [];
+
+      const ruleIds = getFocusRuleIds(focusCategorySites.length);
+
+      if (focusMode) {
+        const rules = generateBlockingRules(focusCategorySites);
+
+        await chrome.declarativeNetRequest.updateDynamicRules({
+          removeRuleIds: ruleIds,
+          addRules: rules,
+        });
+      } else {
+        await chrome.declarativeNetRequest.updateDynamicRules({
+          removeRuleIds: ruleIds,
+          addRules: [],
+        });
+      }
+    };
+
+    updateBlockingRules();
+  }, [focusMode, categories]);
+
+
 
   return (
     <div className="p-4 text-sm w-screen min-h-screen bg-gray-100">
@@ -144,13 +189,24 @@ const App = () => {
         Web Story – Your Browsing Adventure
       </h1>
 
+      <div className="flex justify-center mt-4 mb-6">
+        <button
+          onClick={() => setFocusMode(prev => !prev)}
+          className={`px-6 py-2 rounded-full font-semibold transition-colors duration-200 ${focusMode ? "bg-red-500 text-white" : "bg-green-500 text-white"
+            }`}
+        >
+          {focusMode ? "Stop Focus Mode 🔓" : "Start Focus Mode 🔒"}
+        </button>
+      </div>
+
+
       <div className="flex justify-center gap-4 mb-6">
         {["today", "7days", "30days"].map((tab) => (
           <button
             key={tab}
             className={`px-4 py-2 rounded-md font-medium ${activeTab === tab
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-gray-800"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-300 text-gray-800"
               }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -161,7 +217,6 @@ const App = () => {
         ))}
       </div>
 
-      {/* Flex container for top sites and categories */}
       <div className="flex flex-col md:flex-row justify-center gap-8 px-4">
         {/* Top Sites Card */}
         <div className="bg-white shadow-md rounded-xl p-6 w-full md:w-1/2">
@@ -199,10 +254,17 @@ const App = () => {
             </div>
           </div>
         </div>
-
-        {/* Categories Card */}
-        <div className="bg-white shadow-md rounded-xl p-6 w-full md:w-1/3">
-          <h2 className="text-lg font-semibold mb-4">Categories</h2>
+        {/* Categories Summary Card */}
+        <div className="bg-white shadow-md rounded-xl p-6 w-full md:w-1/3 relative">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Categories</h2>
+            <button
+              onClick={() => setShowModal(true)}
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md w-full"
+            >
+              Customize Categories
+            </button>
+          </div>
           <ul className="space-y-2">
             {categoryData.map((item, idx) => (
               <li key={idx} className="flex items-center justify-between">
@@ -222,9 +284,20 @@ const App = () => {
             ))}
           </ul>
         </div>
-      </div>
-    </div>
 
+      </div>
+
+      {/* Category Editor */}
+      {showModal && (
+        <CustomizeCategoriesModal
+          categories={categories}
+          setCategories={setCategories}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+
+
+    </div>
   );
 };
 

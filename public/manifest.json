@@ -4,7 +4,10 @@
     "version": "1.0",
     "description": "Shows most visited sites from the last 7 days.",
     "permissions": [
-        "history"
+        "history",
+        "declarativeNetRequest",
+        "declarativeNetRequestWithHostAccess",
+        "storage"
     ],
     "action": {
         "default_title": "Browse Buddy",
