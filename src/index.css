@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.radial-progress {
+    --value: 0;
+    --size: 6rem;
+    --thickness: 8px;
+
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(circle closest-side,
+            white 0,
+            transparent calc(100% - var(--thickness)),
+            transparent 0 100%),
+        conic-gradient(hsl(var(--hue), 80%, 60%) calc(var(--value) * 1%),
+            hsl(var(--hue), 80%, 90%) 0);
+    font-size: calc(var(--size) / 5);
+    font-weight: bold;
+}
+
+.radial-progress::before {
+    counter-reset: percentage var(--value);
+    content: counter(percentage) '%';
+}

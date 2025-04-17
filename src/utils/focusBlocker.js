@@ -12,7 +12,7 @@ export const generateBlockingRules = (domains) => {
             }
         },
         condition: {
-            urlFilter: `||${domain}^`, // This matches domain + subpages
+            urlFilter: domain === "x.com" ? "*://x.com/*" : `||${domain}^`,  // This matches domain + subpages
             resourceTypes: ["main_frame"]
         }
     }));
