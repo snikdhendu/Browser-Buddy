@@ -36,8 +36,8 @@ A privacy-first Chrome Extension that visualizes your browser usage like your ph
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/your-username/browser-buddy-screentime.git
-   cd browser-buddy-screentime
+   git https://github.com/snikdhendu/Browser-Buddy.git
+ 
 
 2.  **Install Dependencies**
    ```bash
