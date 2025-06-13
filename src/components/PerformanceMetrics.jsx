@@ -175,19 +175,22 @@ const PerformanceMetrics = ({ categories, activeTab }) => {
     const getCategoryColor = (category) => {
         switch (category) {
             case "Social Media":
-                return "bg-pink-500"
+                return "bg-gradient-to-r from-pink-500 to-rose-500"
             case "AI Tools":
-                return "bg-cyan-500"
+                return "bg-gradient-to-r from-cyan-500 to-teal-500"
             case "Search Engines":
-                return "bg-blue-500"
+                return "bg-gradient-to-r from-blue-500 to-indigo-500"
             case "Communication":
-                return "bg-purple-500"
+                return "bg-gradient-to-r from-purple-500 to-fuchsia-500"
             case "News & Media":
-                return "bg-amber-500"
+                return "bg-gradient-to-r from-amber-500 to-orange-500"
+            case "Others":
+                return "bg-gradient-to-r from-yellow-400 to-yellow-600"
             default:
-                return "bg-gray-500"
+                return "bg-gradient-to-r from-gray-400 to-gray-600"
         }
     }
+
 
     // Calculate height for a category segment in the stacked bar
     const calculateBarHeight = (count, maxValue) => {

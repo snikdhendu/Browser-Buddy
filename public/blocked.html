@@ -1,33 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Blocked</title>
+    <meta charset="UTF-8">
+    <title>Focus Mode - Social Media Blocked</title>
     <style>
         body {
-            background-color: #f8d7da;
-            color: #721c24;
-            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1f1f2e, #2a2a40);
+            color: #e0e0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            flex-direction: column;
+            text-align: center;
         }
 
-        .box {
-            padding: 2rem;
-            border: 2px solid #f5c6cb;
-            border-radius: 8px;
-            background-color: #fff;
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 480px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #a78bfa;
+            margin-top: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #d1d5db;
+            margin-top: 0.75rem;
+        }
+
+        .animation-placeholder {
+            width: 180px;
+            height: 180px;
+            margin: 1.5rem auto;
+            border-radius: 50%;
+            background: #4c1d95;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 0 20px #9333ea, 0 0 40px #7e22ce;
+            animation: pulse 2s infinite;
+        }
+
+        .animation-placeholder img {
+            width: 200px;
+            height: 200px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        .quote {
+            margin-top: 1.25rem;
+            font-size: 0.95rem;
+            color: #9ca3af;
+            font-style: italic;
         }
     </style>
 </head>
 
 <body>
-    <div class="box">
-        <h1>Focus Mode Active</h1>
-        <p>This site is blocked right now to help you stay focused.</p>
+    <div class="container">
+        <div class="animation-placeholder">
+            <!-- Productivity 🌟 -->
+            <img src="girl.gif" alt="">
+        </div>
+        <h1>Social Media Blocked ✋</h1>
+        <p>You're in Focus Mode — every minute saved here is fueling your goals.</p>
+        <p>Keep going! You're building something bigger than a scroll.</p>
+        <div class="quote">“Discipline is choosing between what you want now and what you want most.”</div>
     </div>
 </body>
 

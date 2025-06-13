@@ -40,18 +40,75 @@ const App = () => {
     return saved ? JSON.parse(saved) : defaultCategories
   })
   const [focusMode, setFocusMode] = useState(() => {
-    return JSON.parse(localStorage.getItem("focusMode")) || false
-  })
+    const savedFocusMode = localStorage.getItem("focusMode");
+    return savedFocusMode ? JSON.parse(savedFocusMode) : false;
+  });
 
   const [showModal, setShowModal] = useState(false)
   const [historyData, setHistoryData] = useState([])
   const [categoryData, setCategoryData] = useState([])
   const [activeTab, setActiveTab] = useState("today")
   const [isLoading, setIsLoading] = useState(true)
+  const [focusTimer, setFocusTimer] = useState(0); // in seconds
+  const [totalFocusTime, setTotalFocusTime] = useState(() => {
+    const saved = localStorage.getItem("totalFocusTime");
+    // Check if we're still on the same day
+    const lastDate = localStorage.getItem("lastFocusDate");
+    const today = new Date().toDateString();
+
+    if (lastDate === today) {
+      return saved ? parseInt(saved) : 0;
+    } else {
+      return 0; // Reset if it's a new day
+    }
+  });
+  const [timerInterval, setTimerInterval] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("focusMode", JSON.stringify(focusMode))
-  }, [focusMode])
+    // Save the current focus mode state to localStorage
+    localStorage.setItem("focusMode", JSON.stringify(focusMode));
+
+    if (focusMode) {
+      // Start the timer
+      const interval = setInterval(() => {
+        setFocusTimer(prev => prev + 1);
+        setTotalFocusTime(prev => prev + 1);
+
+        // Save total focus time to localStorage
+        localStorage.setItem("totalFocusTime", (totalFocusTime + 1).toString());
+        localStorage.setItem("lastFocusDate", new Date().toDateString());
+      }, 1000);
+
+      setTimerInterval(interval);
+    } else {
+      // Stop the timer
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        setTimerInterval(null);
+      }
+      setFocusTimer(0);
+    }
+
+    // Clean up on unmount
+    return () => {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+    };
+  }, [focusMode, totalFocusTime]);
+
+  const toggleFocusMode = () => {
+    const newFocusMode = !focusMode;
+    setFocusMode(newFocusMode);
+    localStorage.setItem("focusMode", JSON.stringify(newFocusMode));
+  };
+
+  // Add this function to format the time for display
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
 
   useEffect(() => {
     localStorage.setItem("customCategories", JSON.stringify(categories))
@@ -168,7 +225,7 @@ const App = () => {
   const getCategoryIcon = (category) => {
     switch (category) {
       case "Social Media":
-        return "👥"
+        return "📺"
       case "AI Tools":
         return "🤖"
       case "Search Engines":
@@ -177,8 +234,10 @@ const App = () => {
         return "💬"
       case "News & Media":
         return "📰"
+      case "Others":
+        return "📂"
       default:
-        return "📁"
+        return "🚀"
     }
   }
 
@@ -190,37 +249,55 @@ const App = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-slate-800 dark:text-slate-100">
       <header className="bg-white dark:bg-slate-800 shadow-sm py-6 px-4 mb-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center gap-3 mb-4 md:mb-0">
-            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-2 rounded-lg">
-              <Layout className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-center gap-5 mb-4 md:mb-0">
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-1 rounded-lg">
+              {/* <Layout className="w-6 h-6 text-white" /> */}
+              <img src="/pic.png" alt="icon" className=" h-12 w-12 rounded-lg" />
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              Browser Buddy
-            </h1>
-            <span className="text-sm text-slate-500 dark:text-slate-400">Your Browsing Adventure</span>
+
+            <div className=" flex flex-col gap-0 ">
+              <h1 className="text-2xl text-left font-extrabold bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
+                Browser Buddy
+              </h1>
+              <p className="mt-2 text-left text-base text-slate-400 italic">
+                Reclaim Your Time, One Tab at a Time.
+              </p>
+            </div>
+
           </div>
 
-          <div className="group relative">
-            <button
-              onClick={() => setFocusMode((prev) => !prev)}
-              className={`px-6 py-2.5 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg ${focusMode
-                ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
-                : "bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:from-emerald-600 hover:to-teal-700"
-                }`}
-            >
-              {focusMode ? (
-                <>
-                  <Shield className="w-4 h-4" /> Stop Focus Mode
-                </>
-              ) : (
-                <>
-                  <Zap className="w-4 h-4" /> Start Focus Mode
-                </>
-              )}
-            </button>
+          <div className="flex items-center gap-4">
+            <div className="text-sm font-medium bg-indigo-100 dark:bg-slate-700 py-1.5 px-3 rounded-lg text-indigo-700 dark:text-indigo-300">
+              Total focus time today: {formatTime(totalFocusTime, true)}
+            </div>
 
-            <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 bottom-full mb-2 right-0 top-20 bg-slate-800 text-white text-xs rounded p-2 w-64 pointer-events-none">
-              If you enable the focus mode all the sites under social media category get blocked temporarily to stay focus with your work
+            <div className="group relative">
+              <button
+                onClick={toggleFocusMode}
+                className={`px-6 py-2.5 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg ${focusMode
+                  ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                  : "bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:from-emerald-600 hover:to-teal-700"
+                  }`}
+              >
+                {focusMode ? (
+                  <>
+                    <Shield className="w-4 h-4" /> Stop Focus Mode ({formatTime(focusTimer)})
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-4 h-4" /> Start Focus Mode
+                  </>
+                )}
+              </button>
+
+
+              <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="bg-[#1e2338] text-white text-xs py-1.5 px-2.5 rounded shadow-lg border border-[#2a2d4a] w-[220px]">
+                  If you enable the focus mode all the sites under social media category get blocked temporarily to stay focus with your work
+                </div>
+                <div className="w-2 h-2 bg-[#1e2338] border-l border-t border-[#2a2d4a] transform rotate-45 absolute left-1/2 -top-1 -ml-1"></div>
+              </div>
+
             </div>
           </div>
         </div>

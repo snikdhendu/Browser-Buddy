@@ -7,6 +7,16 @@ const CustomizeCategoriesModal = ({ categories, setCategories, onClose }) => {
     const [newCategory, setNewCategory] = useState("")
     const [newDomains, setNewDomains] = useState({})
 
+    const normalizeDomain = (url) => {
+        try {
+            const parsed = new URL(url.includes("://") ? url : `https://${url}`);
+            return parsed.hostname.replace(/^www\./, "");
+        } catch {
+            return url.trim().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "");
+        }
+    }
+
+
     const handleAddCategory = () => {
         const trimmed = newCategory.trim()
         if (trimmed && !categories[trimmed]) {
@@ -48,7 +58,7 @@ const CustomizeCategoriesModal = ({ categories, setCategories, onClose }) => {
 
     const handleKeyDown = (e, category) => {
         if (e.key === "Enter" && newDomains[category]?.trim()) {
-            handleAddDomain(category, newDomains[category].trim())
+            handleAddDomain(category, normalizeDomain(newDomains[category].trim()))
             setNewDomains((prev) => ({
                 ...prev,
                 [category]: "",
@@ -56,10 +66,11 @@ const CustomizeCategoriesModal = ({ categories, setCategories, onClose }) => {
         }
     }
 
+
     const getCategoryIcon = (category) => {
         switch (category) {
             case "Social Media":
-                return "👥"
+                return "📺"
             case "AI Tools":
                 return "🤖"
             case "Search Engines":
@@ -68,8 +79,10 @@ const CustomizeCategoriesModal = ({ categories, setCategories, onClose }) => {
                 return "💬"
             case "News & Media":
                 return "📰"
+            case "Others":
+                return "📂"
             default:
-                return "📁"
+                return "🚀"
         }
     }
 
@@ -109,8 +122,8 @@ const CustomizeCategoriesModal = ({ categories, setCategories, onClose }) => {
                             onClick={handleAddCategory}
                             disabled={!newCategory.trim()}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 ${newCategory.trim()
-                                    ? "bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white shadow-sm hover:shadow"
-                                    : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                                ? "bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white shadow-sm hover:shadow"
+                                : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 cursor-not-allowed"
                                 }`}
                         >
                             <Plus className="w-4 h-4" /> Add
@@ -119,7 +132,7 @@ const CustomizeCategoriesModal = ({ categories, setCategories, onClose }) => {
                 </div>
 
                 <div className="space-y-6">
-                    {Object.entries(categories).map(([category, domains]) => (
+                    {Object.entries(categories).reverse().map(([category, domains]) => (
                         <div
                             key={category}
                             className="p-4 border border-slate-200 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-800/50"
@@ -157,14 +170,15 @@ const CustomizeCategoriesModal = ({ categories, setCategories, onClose }) => {
                                     <button
                                         onClick={() => {
                                             if (newDomains[category]?.trim()) {
-                                                handleAddDomain(category, newDomains[category].trim())
+                                                handleAddDomain(category, normalizeDomain(newDomains[category].trim()))
                                                 handleInputChange(category, "")
                                             }
                                         }}
+
                                         disabled={!newDomains[category]?.trim()}
                                         className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${newDomains[category]?.trim()
-                                                ? "bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
-                                                : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                                            ? "bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
+                                            : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 cursor-not-allowed"
                                             }`}
                                     >
                                         Add
