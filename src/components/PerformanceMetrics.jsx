@@ -183,7 +183,7 @@ const PerformanceMetrics = ({ categories, activeTab }) => {
             case "Communication":
                 return "bg-gradient-to-r from-purple-500 to-fuchsia-500"
             case "News & Media":
-                return "bg-gradient-to-r from-amber-500 to-orange-500"
+                return "bg-gradient-to-r from-green-500 to-green-900"
             case "Others":
                 return "bg-gradient-to-r from-yellow-400 to-yellow-600"
             default:

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import CustomizeCategoriesModal from "./components/CustomizeCategoriesModal"
 import { generateBlockingRules, getFocusRuleIds } from "./utils/focusBlocker"
-import { BarChart, Layout, Settings, Shield, Zap } from "lucide-react"
+import { BarChart, Layout, Settings, Shield, Zap, Star } from "lucide-react"
 import PerformanceMetrics from "./components/PerformanceMetrics"
 
 // Declare chrome variable for use in non-chrome environments (e.g., testing, development)
@@ -300,6 +300,14 @@ const App = () => {
 
             </div>
           </div>
+          <a
+            href="https://github.com/snikdhendu/Browser-Buddy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2.5 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg bg-gradient-to-r from-gray-700 to-gray-900 text-white hover:from-gray-800 hover:to-black"
+          >
+            <Star className="w-4 h-4 fill-yellow-400 border-none" /> Give a star on GitHub
+          </a>
         </div>
       </header>
 
@@ -472,6 +480,7 @@ const App = () => {
         </div>
       </main>
 
+
       {/* Category Editor */}
       {showModal && (
         <CustomizeCategoriesModal
@@ -485,7 +494,30 @@ const App = () => {
         categories={categories}
         activeTab={activeTab}
       />
+      <footer className="bg-white dark:bg-slate-800 shadow-md py-4 px-6 mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-slate-600 dark:text-slate-400 font-medium mb-2 sm:mb-0">Made by
+            <a
+              href="https://www.snikdhendu.me/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            >
+              Snikdhendu Pramanik
+            </a>
+          </p>
+          <a
+            href="https://x.com/snikdhendu"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+          >
+            Follow on X
+          </a>
+        </div>
+      </footer>
     </div>
+
 
 
   )
