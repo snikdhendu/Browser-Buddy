@@ -247,67 +247,102 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-slate-800 dark:text-slate-100">
-      <header className="bg-white dark:bg-slate-800 shadow-sm py-6 px-4 mb-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center justify-center gap-5 mb-4 md:mb-0">
-            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-1 rounded-lg">
-              {/* <Layout className="w-6 h-6 text-white" /> */}
-              <img src="/pic.png" alt="icon" className=" h-12 w-12 rounded-lg" />
-            </div>
+      <header className="relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-700/50 py-8 px-6 mb-6">
+        {/* Subtle background gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-50/30 via-transparent to-indigo-50/30 dark:from-purple-900/10 dark:via-transparent dark:to-indigo-900/10"></div>
 
-            <div className=" flex flex-col gap-0 ">
-              <h1 className="text-2xl text-left font-extrabold bg-gradient-to-r from-purple-500 to-indigo-600 bg-clip-text text-transparent">
-                Browser Buddy
-              </h1>
-              <p className="mt-2 text-left text-base text-slate-400 italic">
-                Reclaim Your Time, One Tab at a Time.
-              </p>
-            </div>
-
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="text-sm font-medium bg-indigo-100 dark:bg-slate-700 py-1.5 px-3 rounded-lg text-indigo-700 dark:text-indigo-300">
-              Total focus time today: {formatTime(totalFocusTime, true)}
-            </div>
-
-            <div className="group relative">
-              <button
-                onClick={toggleFocusMode}
-                className={`px-6 py-2.5 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg ${focusMode
-                  ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
-                  : "bg-gradient-to-r from-emerald-500 to-teal-600 text-white hover:from-emerald-600 hover:to-teal-700"
-                  }`}
-              >
-                {focusMode ? (
-                  <>
-                    <Shield className="w-4 h-4" /> Stop Focus Mode ({formatTime(focusTimer)})
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-4 h-4" /> Start Focus Mode
-                  </>
-                )}
-              </button>
-
-
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <div className="bg-[#1e2338] text-white text-xs py-1.5 px-2.5 rounded shadow-lg border border-[#2a2d4a] w-[220px]">
-                  If you enable the focus mode all the sites under social media category get blocked temporarily to stay focus with your work
+        <div className="relative max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
+            {/* Brand Section */}
+            <div className="flex items-center gap-6 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl blur-sm opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+                <div className="relative bg-gradient-to-r from-purple-500 to-indigo-600 p-2 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                  <img src="/pic.png" alt="Browser Buddy" className="h-14 w-14 rounded-lg" />
                 </div>
-                <div className="w-2 h-2 bg-[#1e2338] border-l border-t border-[#2a2d4a] transform rotate-45 absolute left-1/2 -top-1 -ml-1"></div>
               </div>
 
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-black bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 bg-clip-text text-transparent tracking-tight">
+                  Browser Buddy
+                </h1>
+                <p className="text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+                  Reclaim Your Time, One Tab at a Time.
+                </p>
+              </div>
+            </div>
+
+            {/* Stats & Controls Section */}
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              {/* Focus Time Badge */}
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-xl blur-sm"></div>
+                <div className="relative bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-slate-700 dark:to-slate-600 border border-indigo-200/50 dark:border-slate-600 py-3 px-5 rounded-xl shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">
+                      Focus time today: {formatTime(totalFocusTime)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-3">
+                {/* Focus Mode Toggle */}
+                <div className="group relative">
+                  <button
+                    onClick={toggleFocusMode}
+                    className={`relative overflow-hidden px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2.5 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 ${focusMode
+                      ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white"
+                      : "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white"
+                      }`}
+                  >
+                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative flex items-center gap-2.5">
+                      {focusMode ? (
+                        <>
+                          <Shield className="w-4 h-4" />
+                          <span className="hidden sm:inline">Stop Focus</span>
+                          <span className="font-mono text-sm">({formatTime(focusTimer)})</span>
+                        </>
+                      ) : (
+                        <>
+                          <Zap className="w-4 h-4" />
+                          <span>Start Focus Mode</span>
+                        </>
+                      )}
+                    </div>
+                  </button>
+
+                  {/* Enhanced Tooltip */}
+                  <div className="absolute w-xl top-full left-1/2 transform -translate-x-1/2 mt-3 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-y-1">
+                    <div className="bg-slate-900 dark:bg-slate-800 text-white text-xs py-3 px-4 rounded-lg shadow-xl border border-slate-700 w-300">
+                      <p className="leading-relaxed w-300">
+                        Enable focus mode to temporarily block all social media sites and stay productive
+                      </p>
+                      <div className="w-3 h-3 bg-slate-900 dark:bg-slate-800 border-l border-t border-slate-700 transform rotate-45 absolute left-1/2 -top-1.5 -ml-1.5"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* GitHub Star Button */}
+                <a
+                  href="https://github.com/snikdhendu/Browser-Buddy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative overflow-hidden px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2.5 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 bg-gradient-to-r from-slate-700 to-slate-900 hover:from-slate-800 hover:to-black text-white"
+                >
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative flex items-center gap-2.5">
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    {/* <Github className="w-4 h-4" /> */}
+                    <span className="hidden sm:inline">Star on GitHub</span>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
-          <a
-            href="https://github.com/snikdhendu/Browser-Buddy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2.5 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-md hover:shadow-lg bg-gradient-to-r from-gray-700 to-gray-900 text-white hover:from-gray-800 hover:to-black"
-          >
-            <Star className="w-4 h-4 fill-yellow-400 border-none" /> Give a star on GitHub
-          </a>
         </div>
       </header>
 

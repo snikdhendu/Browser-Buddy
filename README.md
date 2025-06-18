@@ -2,8 +2,9 @@
 
 A privacy-first Chrome Extension that visualizes your browser usage like your phone's screen time report. Get insights into how much time you spend on different websites throughout the day and week—helping you build better digital habits and stay productive online.
 
-![Browser Buddy Screenshot](./assets/screenshot.png)
+![Browser Buddy Screenshot](./public/readme1.png)
 
+![Browser Buddy Screenshot](./public/readme2.png)
 ---
 
 ## 🚀 Features
