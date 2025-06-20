@@ -65,23 +65,25 @@ const App = () => {
   const [timerInterval, setTimerInterval] = useState(null);
 
   useEffect(() => {
-    // Save the current focus mode state to localStorage
     localStorage.setItem("focusMode", JSON.stringify(focusMode));
 
     if (focusMode) {
-      // Start the timer
       const interval = setInterval(() => {
-        setFocusTimer(prev => prev + 1);
-        setTotalFocusTime(prev => prev + 1);
+        setFocusTimer(prev => {
+          const newTimer = prev + 1;
+          return newTimer;
+        });
 
-        // Save total focus time to localStorage
-        localStorage.setItem("totalFocusTime", (totalFocusTime + 1).toString());
-        localStorage.setItem("lastFocusDate", new Date().toDateString());
+        setTotalFocusTime(prev => {
+          const updatedTotal = prev + 1;
+          localStorage.setItem("totalFocusTime", updatedTotal.toString());
+          localStorage.setItem("lastFocusDate", new Date().toDateString());
+          return updatedTotal;
+        });
       }, 1000);
 
       setTimerInterval(interval);
     } else {
-      // Stop the timer
       if (timerInterval) {
         clearInterval(timerInterval);
         setTimerInterval(null);
@@ -89,13 +91,13 @@ const App = () => {
       setFocusTimer(0);
     }
 
-    // Clean up on unmount
     return () => {
       if (timerInterval) {
         clearInterval(timerInterval);
       }
     };
-  }, [focusMode, totalFocusTime]);
+  }, [focusMode]);
+
 
   const toggleFocusMode = () => {
     const newFocusMode = !focusMode;
@@ -318,7 +320,7 @@ const App = () => {
                   {/* Enhanced Tooltip */}
                   <div className="absolute w-xl top-full left-1/2 transform -translate-x-1/2 mt-3 z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-y-1">
                     <div className="bg-slate-900 dark:bg-slate-800 text-white text-xs py-3 px-4 rounded-lg shadow-xl border border-slate-700 w-300">
-                      <p className="leading-relaxed w-300">
+                      <p className="leading-relaxed w-[180px]">
                         Enable focus mode to temporarily block all social media sites and stay productive
                       </p>
                       <div className="w-3 h-3 bg-slate-900 dark:bg-slate-800 border-l border-t border-slate-700 transform rotate-45 absolute left-1/2 -top-1.5 -ml-1.5"></div>
@@ -531,12 +533,12 @@ const App = () => {
       />
       <footer className="bg-white dark:bg-slate-800 shadow-md py-4 px-6 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-slate-600 dark:text-slate-400 font-medium mb-2 sm:mb-0">Made by
+          <p className="text-slate-600 dark:text-slate-400 font-medium mb-2 sm:mb-0 flex gap-1">Made by
             <a
               href="https://www.snikdhendu.me/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              className="flex font-extrabold items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
             >
               Snikdhendu Pramanik
             </a>

@@ -5,6 +5,8 @@ A privacy-first Chrome Extension that visualizes your browser usage like your ph
 ![Browser Buddy Screenshot](./public/readme1.png)
 
 ![Browser Buddy Screenshot](./public/readme2.png)
+
+![Browser Buddy Screenshot](./public/readme3.png)
 ---
 
 ## 🚀 Features
